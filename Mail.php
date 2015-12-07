@@ -29,7 +29,7 @@ function infra_mail_sent($subject, $email_from, $email_to, $body)
 	$subject = infra_mail_encode($subject);
 	$from = infra_mail_encode($name_from).' <'.$email_from.'>';
 
-	$conf = infra_config();
+	$conf = Infra::config();
 	if ($conf['admin']['from']) {
 		$headers = 'From: '.$conf['admin']['from']."\r\n";
 	} else {
@@ -62,7 +62,7 @@ function infra_mail_sent($subject, $email_from, $email_to, $body)
 function infra_mail_toSupport($subject, $from, $body)
 {
 	//письмо в Техническую поддержку 
-	$conf = infra_config();
+	$conf = Infra::config();
 	$emailto = $conf['admin']['support'];
 	if (!$emailto) {
 		$emailto = $conf['admin']['email'];
@@ -73,7 +73,7 @@ function infra_mail_toSupport($subject, $from, $body)
 function infra_mail_fromSupport($subject, $to, $body)
 {
 	//письмо от админa
-	$conf = infra_config();
+	$conf = Infra::config();
 	$from = $conf['admin']['support'];
 	if (!$from) {
 		$from = $conf['admin']['email'];
@@ -84,7 +84,7 @@ function infra_mail_fromSupport($subject, $to, $body)
 function infra_mail_fromAdmin($subject, $to, $body)
 {
 	//письмо от админa
-	$conf = infra_config();
+	$conf = Infra::config();
 	$from = $conf['admin']['email'];
 
 	return infra_mail_sent($subject, $from, $to, $body);
@@ -92,7 +92,7 @@ function infra_mail_fromAdmin($subject, $to, $body)
 function infra_mail_toAdmin($subject, $from, $body, $debug = false)
 {
 	//письмо админу
-	$conf = infra_config();
+	$conf = Infra::config();
 	if ($debug) {
 		if ($conf['admin']['support']) {
 			$emailto = $conf['admin']['support'];
@@ -110,7 +110,7 @@ function infra_mail_toAdmin($subject, $from, $body, $debug = false)
 function infra_mail_admin($subject, $body, $debug = false)
 {
 	//письмо админу от админа
-	$conf = infra_config();
+	$conf = Infra::config();
 	$from = $conf['admin']['email'];
 	if ($debug) {
 		if ($conf['admin']['support']) {
