@@ -1,4 +1,23 @@
 <?php
+namespace infrajs\mail;
+class Mail {
+	static public function toAdmin($subject, $from, $body, $debug = false)
+	{
+		//письмо админу
+		$conf = Config::get('access');
+		if ($debug) {
+			if ($conf['support']) {
+				$emailto = $conf['support'];
+			} else {
+				throw new Exception('Нет support в .infra.json '.$subject);
+			}
+		} else {
+			$emailto = $conf['email'];
+		}
+
+		return infra_mail_sent($subject, $from, $emailto, $body);
+	}
+}
 
 function infra_mail_encode($str)
 {
@@ -89,24 +108,7 @@ function infra_mail_fromAdmin($subject, $to, $body)
 
 	return infra_mail_sent($subject, $from, $to, $body);
 }
-function infra_mail_toAdmin($subject, $from, $body, $debug = false)
-{
-	//письмо админу
-	$conf = Config::get();
-	if ($debug) {
-		if ($conf['admin']['support']) {
-			$emailto = $conf['admin']['support'];
-		} else {
-			$subject = 'Нет support в .config.json '.$subject;
-			echo $subject;
-			exit;
-		}
-	} else {
-		$emailto = $conf['admin']['email'];
-	}
 
-	return infra_mail_sent($subject, $from, $emailto, $body);
-}
 function infra_mail_admin($subject, $body, $debug = false)
 {
 	//письмо админу от админа
