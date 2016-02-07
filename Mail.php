@@ -1,5 +1,6 @@
 <?php
 namespace infrajs\mail;
+use infrajs\config\Config;
 class Mail {
 	static public function toAdmin($subject, $from, $body, $debug = false)
 	{
