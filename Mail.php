@@ -79,7 +79,7 @@ function infra_mail_sent($subject, $email_from, $email_to, $body)
 
 	return $r;
 }
-function infra_mail_toSupport($subject, $from, $body)
+function infra_mail_toSupport($subject, $from, $body) //depricated
 {
 	//письмо в Техническую поддержку 
 	$conf = Config::get();
