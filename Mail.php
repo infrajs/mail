@@ -1,11 +1,11 @@
 <?php
 namespace infrajs\mail;
-use infrajs\config\Config;
+use infrajs\access\Access;
 class Mail {
 	static public function toAdmin($subject, $from, $body, $debug = false)
 	{
 		//письмо админу
-		$conf = Config::get('access');
+		$conf = Access::$conf['admin'];
 		if ($debug) {
 			if ($conf['support']) {
 				$emailto = $conf['support'];
@@ -13,6 +13,17 @@ class Mail {
 				throw new Exception('Нет support в .infra.json '.$subject);
 			}
 		} else {
+			$emailto = $conf['email'];
+		}
+
+		return infra_mail_sent($subject, $from, $emailto, $body);
+	}
+	function toSupport($subject, $from, $body) //depricated
+	{
+		//письмо в Техническую поддержку 
+		$conf = Access::$conf['admin'];
+		$emailto = $conf['support'];
+		if (!$emailto) {
 			$emailto = $conf['email'];
 		}
 
@@ -49,12 +60,9 @@ function infra_mail_sent($subject, $email_from, $email_to, $body)
 	$subject = infra_mail_encode($subject);
 	$from = infra_mail_encode($name_from).' <'.$email_from.'>';
 
-	$conf = Config::get();
-	if ($conf['admin']['from']) {
-		$headers = 'From: '.$conf['admin']['from']."\r\n";
-	} else {
-		$headers = 'From: '.$from."\r\n";
-	}
+	
+	$headers = 'From: '.$from."\r\n";
+	
 	$headers .= "Content-type: text/plain; charset=UTF-8\r\n";
 	$headers .= 'Reply-To: '.$email_from."\r\n";
 
@@ -79,24 +87,14 @@ function infra_mail_sent($subject, $email_from, $email_to, $body)
 
 	return $r;
 }
-function infra_mail_toSupport($subject, $from, $body) //depricated
-{
-	//письмо в Техническую поддержку 
-	$conf = Config::get();
-	$emailto = $conf['admin']['support'];
-	if (!$emailto) {
-		$emailto = $conf['admin']['email'];
-	}
 
-	return infra_mail_sent($subject, $from, $emailto, $body);
-}
 function infra_mail_fromSupport($subject, $to, $body)
 {
 	//письмо от админa
-	$conf = Config::get();
-	$from = $conf['admin']['support'];
+	$conf = Access::$conf['admin'];
+	$from = $conf['support'];
 	if (!$from) {
-		$from = $conf['admin']['email'];
+		$from = $conf['email'];
 	}
 
 	return infra_mail_sent($subject, $from, $to, $body);
@@ -104,8 +102,8 @@ function infra_mail_fromSupport($subject, $to, $body)
 function infra_mail_fromAdmin($subject, $to, $body)
 {
 	//письмо от админa
-	$conf = Config::get();
-	$from = $conf['admin']['email'];
+	$conf = Access::$conf['admin'];
+	$from = $conf['email'];
 
 	return infra_mail_sent($subject, $from, $to, $body);
 }
@@ -113,11 +111,11 @@ function infra_mail_fromAdmin($subject, $to, $body)
 function infra_mail_admin($subject, $body, $debug = false)
 {
 	//письмо админу от админа
-	$conf = Config::get();
-	$from = $conf['admin']['email'];
+	$conf = Access::$conf['admin'];
+	$from = $conf['email'];
 	if ($debug) {
-		if ($conf['admin']['support']) {
-			$to = $conf['admin']['support'];
+		if ($conf['support']) {
+			$to = $conf['support'];
 		} else {
 			$subject = 'Нет support в .config.json '.$subject;
 			echo $subject;

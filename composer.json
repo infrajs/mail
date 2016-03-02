@@ -1,6 +1,11 @@
 {
 	"name": "infrajs/mail",
-	"license": "GPL3",
+	"homepage":"https://github.com/infrajs/mail",
+	"require":{
+		"infrajs/access":"~1",
+		"infrajs/path":"~1",
+		"infrajs/ans":"~1"
+	},
 	"autoload": {
 		"psr-4": { "infrajs\\mail\\": "/" }
 	}
