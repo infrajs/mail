@@ -30,7 +30,7 @@
 
 	
 	$body = Path::theme('-mail/update.tpl');
-	$body = file_get_contents($tpl);
+	$body = file_get_contents($body);
 	$body = str_replace( 
 		array("{host}", "{date}"), 
 		array($_SERVER['HTTP_HOST'], date('j.m.Y')), 
@@ -38,7 +38,7 @@
 	);
 	$subject='Выполнено обновление '.$_SERVER['HTTP_HOST'];
 	$email_from='noreplay@'.$_SERVER['HTTP_HOST'];
-	$r = Mail::toSupport($subject,$email_from,$body,true);
+	$r = Mail::toSupport($subject, $email_from, $body);
 	
 	if (!$r) return Ans::err($ans,'Ошибка. Не удалось отправить тестовое письмо');
 	return Ans::ret($ans,'Тестовое письмо отправлено');
