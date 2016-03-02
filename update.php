@@ -40,5 +40,10 @@
 	$email_from='noreplay@'.$_SERVER['HTTP_HOST'];
 	$r = Mail::toSupport($subject, $email_from, $body);
 	
-	if (!$r) return Ans::err($ans,'Ошибка. Не удалось отправить тестовое письмо');
-	return Ans::ret($ans,'Тестовое письмо отправлено');
+	if (!$r) {
+		error_log('Ошибка. Не удалось отправить тестовое письмо.');
+		if(Access::debug()) {
+			echo 'Ошибка. Не удалось отправить  <a href="/mail/update.php">тестовое письмо</a>.';
+			exit;
+		}
+	}
