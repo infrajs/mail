@@ -3,6 +3,7 @@
 	use infrajs\access\Access;
 	use infrajs\ans\Ans;
 	use infrajs\path\Path;
+	use infrajs\load\Load;
 
 	Access::test(true);
 	
@@ -42,7 +43,7 @@
 	
 	if (!$r) {
 		error_log('Ошибка. Не удалось отправить тестовое письмо.');
-		if(Access::debug()) {
+		if(Access::debug()&&!Load::isphp()) {
 			echo '<pre>Ошибка. Не удалось отправить <a href="/-mail/update.php">тестовое письмо</a>.</pre>'."\n";
 		}
 	}
