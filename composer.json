@@ -1,5 +1,7 @@
 {
 	"name": "infrajs/mail",
+	"license": "GPL3",
+	"description":"mail API",
 	"homepage":"https://github.com/infrajs/mail",
 	"require":{
 		"infrajs/access":"~1",
