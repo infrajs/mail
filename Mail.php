@@ -89,6 +89,14 @@ class Mail {
 		if (!$email) return false;
 		return preg_match('/^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/', $email);
 	}
+	function fromAdmin($subject, $to, $body)
+	{
+		//письмо от админa
+		$conf = Access::$conf['admin'];
+		$from = $conf['email'];
+
+		return Mail::sent($subject, $from, $to, $body);
+	}
 }
 
 
@@ -105,14 +113,7 @@ function infra_mail_fromSupport($subject, $to, $body)
 
 	return Mail::sent($subject, $from, $to, $body);
 }
-function infra_mail_fromAdmin($subject, $to, $body)
-{
-	//письмо от админa
-	$conf = Access::$conf['admin'];
-	$from = $conf['email'];
 
-	return Mail::sent($subject, $from, $to, $body);
-}
 
 function infra_mail_admin($subject, $body, $debug = false)
 {
