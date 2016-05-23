@@ -1,3 +1,4 @@
 {
+	"conf":"infrajs\\mail\\Mail",
 	"update":"update.php"
 }

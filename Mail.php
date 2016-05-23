@@ -2,6 +2,9 @@
 namespace infrajs\mail;
 use infrajs\access\Access;
 class Mail {
+	static public $conf = array(
+		'from' => false
+	);
 	static public function toAdmin($subject, $from, $body, $debug = false)
 	{
 		//письмо админу
@@ -16,7 +19,7 @@ class Mail {
 			$emailto = $conf['email'];
 		}
 
-		return infra_mail_sent($subject, $from, $emailto, $body);
+		return Mail::sent($subject, $from, $emailto, $body);
 	}
 	function toSupport($subject, $from, $body) //depricated
 	{
@@ -27,66 +30,69 @@ class Mail {
 			$emailto = $conf['email'];
 		}
 
-		return infra_mail_sent($subject, $from, $emailto, $body);
+		return Mail::sent($subject, $from, $emailto, $body);
 	}
-}
-
-function infra_mail_encode($str)
-{
-	return '=?UTF-8?B?'.base64_encode($str).'?=';
-}
-function infra_mail_check($email)
-{
-	if (!$email) {
-		return false;
-	}
-
-	return preg_match('/^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/', $email);
-}
-function infra_mail_sent($subject, $email_from, $email_to, $body)
-{
-	$p = explode(',', $email_from);
-	$email_from = $p[0];
-	$p = explode('<', $email_from);
-	if (sizeof($p) > 1) {
-		$name_from = trim($p[0]);
-		$p = explode('>', $p[1]);
-		$email_from = trim($p[0]);
-	} else {
-		$name_from = '';
-		$email_from = trim($p[0]);
-	}
-
-	$subject = infra_mail_encode($subject);
-	$from = infra_mail_encode($name_from).' <'.$email_from.'>';
-
-	
-	$headers = 'From: '.$from."\r\n";
-	
-	$headers .= "Content-type: text/plain; charset=UTF-8\r\n";
-	$headers .= 'Reply-To: '.$email_from."\r\n";
-
-	$p = explode(',', $email_to);
-	for ($i = 0, $l = sizeof($p);$i < $l;++$i) {
-		$email_to = $p[$i];
-		$p2 = explode('<', $email_to);
-		if (sizeof($p2) > 1) {
-			$name_to = trim($p2[0]);
-			$p3 = explode('>', $p2[1]);
-			$email_to = trim($p3[0]);
+	function sent($subject, $email_from, $email_to, $body)
+	{
+		$p = explode(',', $email_from);
+		$email_from = $p[0];
+		$p = explode('<', $email_from);
+		if (sizeof($p) > 1) {
+			$name_from = trim($p[0]);
+			$p = explode('>', $p[1]);
+			$email_from = trim($p[0]);
 		} else {
-			$name_to = '';
-			$email_to = trim($p2[0]);
+			$name_from = '';
+			$email_from = trim($p[0]);
 		}
-		$to = infra_mail_encode($name_to).' <'.$email_to.'>';
-		$r = @mail($to, $subject, $body, $headers);
-		if (!$r) {
-			break;
-		}
-	}
 
-	return $r;
+		$subject = Mail::encode($subject);
+		if (Mail::$conf['from']) {
+			$from = Mail::encode($name_from).' <'.Mail::$conf['from'].'>';
+		} else {
+			$from = Mail::encode($name_from).' <'.$email_from.'>';
+		}
+
+		
+		$headers = 'From: '.$from."\r\n";
+		
+		$headers .= "Content-type: text/plain; charset=UTF-8\r\n";
+		$headers .= 'Reply-To: '.$email_from."\r\n";
+
+		$p = explode(',', $email_to);
+		for ($i = 0, $l = sizeof($p);$i < $l;++$i) {
+			$email_to = $p[$i];
+			$p2 = explode('<', $email_to);
+			if (sizeof($p2) > 1) {
+				$name_to = trim($p2[0]);
+				$p3 = explode('>', $p2[1]);
+				$email_to = trim($p3[0]);
+			} else {
+				$name_to = '';
+				$email_to = trim($p2[0]);
+			}
+			$to = Mail::encode($name_to).' <'.$email_to.'>';
+			$r = @mail($to, $subject, $body, $headers);
+			if (!$r) {
+				break;
+			}
+		}
+
+		return $r;
+	}
+	function encode($str)
+	{
+		return '=?UTF-8?B?'.base64_encode($str).'?=';
+	}
+	function check($email)
+	{
+		if (!$email) return false;
+		return preg_match('/^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/', $email);
+	}
 }
+
+
+
 
 function infra_mail_fromSupport($subject, $to, $body)
 {
@@ -97,7 +103,7 @@ function infra_mail_fromSupport($subject, $to, $body)
 		$from = $conf['email'];
 	}
 
-	return infra_mail_sent($subject, $from, $to, $body);
+	return Mail::sent($subject, $from, $to, $body);
 }
 function infra_mail_fromAdmin($subject, $to, $body)
 {
@@ -105,7 +111,7 @@ function infra_mail_fromAdmin($subject, $to, $body)
 	$conf = Access::$conf['admin'];
 	$from = $conf['email'];
 
-	return infra_mail_sent($subject, $from, $to, $body);
+	return Mail::sent($subject, $from, $to, $body);
 }
 
 function infra_mail_admin($subject, $body, $debug = false)
@@ -125,5 +131,5 @@ function infra_mail_admin($subject, $body, $debug = false)
 		$to = $from;
 	}
 
-	return infra_mail_sent($subject, $from, $to, $body);
+	return Mail::sent($subject, $from, $to, $body);
 }
