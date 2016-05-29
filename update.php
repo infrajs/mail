@@ -42,8 +42,8 @@
 	$r = Mail::toSupport($subject, $email_from, $body);
 	
 	if (!$r) {
-		error_log('Ошибка. Не удалось отправить тестовое письмо.');
+		error_log('Не удалось отправить тестовое письмо.');
 		if(Access::debug()&&!Load::isphp()) {
-			echo '<pre>Ошибка. Не удалось отправить <a href="/-mail/update.php">тестовое письмо</a>.</pre>'."\n";
+			echo '<pre>Не удалось отправить <a href="/-mail/update.php">тестовое письмо</a>.</pre>'."\n";
 		}
 	}
