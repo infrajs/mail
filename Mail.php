@@ -1,6 +1,9 @@
 <?php
 namespace infrajs\mail;
 use infrajs\access\Access;
+use infrajs\nostore\Nostore;
+
+
 class Mail {
 	static public $conf = array(
 		'from' => false
@@ -46,6 +49,7 @@ class Mail {
 			$email_from = trim($p[0]);
 		}
 
+		Nostore::on();
 		$subject = Mail::encode($subject);
 		if (Mail::$conf['from']) {
 			$from = Mail::encode($name_from).' <'.Mail::$conf['from'].'>';
