@@ -24,7 +24,7 @@ class Mail {
 
 		return Mail::sent($subject, $from, $emailto, $body);
 	}
-	function toSupport($subject, $from, $body) //depricated
+	static public function toSupport($subject, $from, $body) //depricated
 	{
 		//письмо в Техническую поддержку 
 		$conf = Access::$conf['admin'];
@@ -35,7 +35,7 @@ class Mail {
 
 		return Mail::sent($subject, $from, $emailto, $body);
 	}
-	function sent($subject, $email_from, $email_to, $body)
+	static public function sent($subject, $email_from, $email_to, $body)
 	{
 		$p = explode(',', $email_from);
 		$email_from = $p[0];
@@ -84,16 +84,16 @@ class Mail {
 
 		return $r;
 	}
-	function encode($str)
+	static public function encode($str)
 	{
 		return '=?UTF-8?B?'.base64_encode($str).'?=';
 	}
-	function check($email)
+	static public function check($email)
 	{
 		if (!$email) return false;
 		return preg_match('/^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/', $email);
 	}
-	function fromAdmin($subject, $to, $body)
+	static public function fromAdmin($subject, $to, $body)
 	{
 		//письмо от админa
 		$conf = Access::$conf['admin'];
