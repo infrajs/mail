@@ -1,4 +1,5 @@
 {
 	"conf":"infrajs\\mail\\Mail",
-	"update":"update.php"
+	"update":"update.php",
+	"from":false
 }
