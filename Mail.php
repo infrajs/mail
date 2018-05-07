@@ -2,7 +2,8 @@
 namespace infrajs\mail;
 use infrajs\access\Access;
 use infrajs\nostore\Nostore;
-
+use infrajs\path\Path;
+use akiyatkin\fs\FS;
 
 class Mail {
 	static public $conf = array(
@@ -35,7 +36,7 @@ class Mail {
 
 		return Mail::sent($subject, $from, $emailto, $body);
 	}
-	static public function sent($subject, $email_from, $email_to, $body)
+	static public function sent($origsubject, $email_from, $email_to, $body)
 	{
 		$p = explode(',', $email_from);
 		$email_from = $p[0];
@@ -50,7 +51,7 @@ class Mail {
 		}
 
 		Nostore::on();
-		$subject = Mail::encode($subject);
+		$subject = Mail::encode($origsubject);
 		if (Mail::$conf['from']) {
 			$from = Mail::encode($name_from).' <'.Mail::$conf['from'].'>';
 		} else {
@@ -63,7 +64,10 @@ class Mail {
 		$headers .= "Content-type: text/plain; charset=UTF-8\r\n";
 		$headers .= 'Reply-To: '.$email_from."\r\n";
 
+		$esubj = Path::encode($origsubject);
+		
 		$p = explode(',', $email_to);
+		$r = true;
 		for ($i = 0, $l = sizeof($p);$i < $l;++$i) {
 			$email_to = $p[$i];
 			$p2 = explode('<', $email_to);
@@ -76,12 +80,20 @@ class Mail {
 				$email_to = trim($p2[0]);
 			}
 			$to = Mail::encode($name_to).' <'.$email_to.'>';
-			$r = @mail($to, $subject, $body, $headers);
-			if (!$r) {
-				break;
-			}
-		}
+			if ($r) $r = @mail($to, $subject, $body, $headers);
+			$res = $r ? 'ok' : 'er';
+			$file1 = '~auto/.mail/from/'.$res.' '.$email_from.' to '.$email_to.' '.$esubj.' '.date('j F Y H-i').'.txt';
+			$file2 = '~auto/.mail/to/'.$res.' '.$email_to.' from '.$email_from.' '.$esubj.' '.date('j F Y H-i').'.txt';
+			/*$mail = array();
+			$mail['subject'] = $origsubject;
+			$mail['email_from'] = $email_from;
+			$mail['email_to'] = $email_to;
+			$mail['time'] = date('j F Y H i');
+			$mail['body'] = $body;*/
 
+			file_put_contents(Path::resolve($file1), $body);
+			file_put_contents(Path::resolve($file2), $body);
+		}
 		return $r;
 	}
 	static public function encode($str)
