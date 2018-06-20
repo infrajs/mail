@@ -91,8 +91,9 @@ class Mail {
 			$mail['time'] = date('j F Y H i');
 			$mail['body'] = $body;*/
 
-			file_put_contents(Path::resolve($file1), $body);
-			file_put_contents(Path::resolve($file2), $body);
+			//@ - ошибка возникает если работать с data символической ссылкой
+			@file_put_contents(Path::resolve($file1), $body);
+			@file_put_contents(Path::resolve($file2), $body);
 		}
 		return $r;
 	}
