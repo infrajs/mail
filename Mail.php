@@ -38,6 +38,9 @@ class Mail {
 	}
 	static public function sent($origsubject, $email_from, $email_to, $body)
 	{
+		if ($email_from === true) {
+			$email_from = 'noreplay@'.$_SERVER['HTTP_HOST'];
+		}
 		$p = explode(',', $email_from);
 		$email_from = $p[0];
 		$p = explode('<', $email_from);
