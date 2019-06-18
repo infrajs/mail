@@ -9,8 +9,8 @@ Access::test(true);
 
 Path::mkdir('~auto/');
 Path::mkdir('~auto/.mail/');
-Path::mkdir('~auto/.mail/to/');
-Path::mkdir('~auto/.mail/from/');
+//Path::mkdir('~auto/.mail/to/');
+//Path::mkdir('~auto/.mail/from/');
 
 $from = 'noreplay@'.$_SERVER['HTTP_HOST'];
 $headers = 'From: '.$from."\r\n";

@@ -5,6 +5,8 @@ use infrajs\nostore\Nostore;
 use infrajs\path\Path;
 use akiyatkin\fs\FS;
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 class Mail {
 	static public $conf = array(
 		'from' => false
@@ -35,6 +37,80 @@ class Mail {
 		}
 
 		return Mail::sent($subject, $from, $emailto, $body);
+	}
+
+	static public function html($subject, $body, $replay_to, $email_to, $debug = 0) { //from to
+		$mail = new PHPMailer();
+
+		$conf = Mail::$conf;
+		if (empty($conf['from'])) $conf['from'] = 'noreplay@'.$_SERVER['HTTP_HOST'];
+
+		$mail->CharSet = 'UTF-8';
+	    //Server settings
+	    $mail->SMTPDebug = $debug;                                       // Enable verbose debug output
+	    $mail->isSMTP();                                          // Set mailer to use SMTP
+
+	    $mail->Host       = $conf['smtp'];  // Specify main and backup SMTP servers
+	    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+	    $mail->Username   = $conf['smtplogin'];                     // SMTP username
+	    $mail->Password   = $conf['smtppassword'];                               // SMTP password
+	    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+	    $mail->Port       = 587;                                    // TCP port to connect to
+
+	    $mail->setFrom($conf['from']);
+
+
+	    if ($email_to === true) $email_to = Access::$conf['admin']['email'];
+		$p = explode(',', $email_to);	
+		for ($i = 0, $l = sizeof($p); $i < $l; ++$i) {
+			$email_to = $p[$i];
+			$p2 = explode('<', $email_to);
+			if (sizeof($p2) > 1) {
+				$name_to = trim($p2[0]);
+				$p3 = explode('>', $p2[1]);
+				$email_to = trim($p3[0]);
+			} else {
+				$name_to = '';
+				$email_to = trim($p2[0]);
+			}
+			$mail->addAddress($email_to, $name_to);     // Add a recipient
+		}
+
+
+
+
+
+	    if ($replay_to === true) $replay_to = Access::$conf['admin']['email'];
+		$p = explode(',', $replay_to);
+		$replay_to = $p[0];
+		$p = explode('<', $replay_to);
+		if (sizeof($p) > 1) {
+			$name_from = trim($p[0]);
+			$p = explode('>', $p[1]);
+			$replay_to = trim($p[0]);
+		} else {
+			$name_from = '';
+			$replay_to = trim($p[0]);
+		}
+	    $mail->addReplyTo($replay_to, $name_from);
+
+
+
+	    // Content
+	    $mail->isHTML(true);                                  // Set email format to HTML
+	    $mail->Subject = $subject;
+	    $mail->Body    = $body;
+
+	    $r = $mail->send();
+	    $res = $r ? 'ok' : 'er';
+	    $body .= "\n\n".$mail->ErrorInfo;
+		$esubj = Path::encode($subject);
+	    
+		$file = '~auto/.mail/'.$email_to.' from '.$replay_to.' '.$res.' '.$esubj.' '.date('j F Y H-i').'.txt';
+		//@ - ошибка возникает если работать с data символической ссылкой
+		file_put_contents(Path::resolve($file), $body);
+	    
+	    return $r;
 	}
 	static public function sent($origsubject, $email_from, $email_to, $body)
 	{

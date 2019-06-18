@@ -1,5 +1,8 @@
 {
 	"conf":"infrajs\\mail\\Mail",
 	"update":"update.php",
+	"smtp":"smtp.yandex.ru",
+	"smtplogin":"",
+	"smtppassword":"",
 	"from":false
 }
