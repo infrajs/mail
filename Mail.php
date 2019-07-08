@@ -39,14 +39,14 @@ class Mail {
 		return Mail::sent($subject, $from, $emailto, $body);
 	}
 
-	static public function html($subject, $body, $replay_to, $email_to, $debug = 0) { //from to
+	static public function html($subject, $body, $replay_to, $email_to, $debug = false) { //from to
 		$mail = new PHPMailer();
 
 		$conf = Mail::$conf;
 		if (empty($conf['from'])) $conf['from'] = 'noreplay@'.$_SERVER['HTTP_HOST'];
 		$mail->CharSet = 'UTF-8';
 	    
-	    //$mail->SMTPDebug = 2;
+	    if (!$debug) $debug = $conf['debug'];
 	    $mail->SMTPDebug = $debug;
 	    
 	    $mail->isSMTP();
