@@ -108,7 +108,7 @@ class Mail {
 	    
 		$file = '~auto/.mail/'.$email_to.' from '.$replay_to.' '.$res.' '.$esubj.' '.date('j F Y H-i').'.txt';
 		//@ - ошибка возникает если работать с data символической ссылкой
-		file_put_contents(Path::resolve($file), $body);
+		@file_put_contents(Path::resolve($file), $body);
 	    
 	    return $r;
 	}
