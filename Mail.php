@@ -59,6 +59,7 @@ class Mail {
 		    $mail->SMTPSecure = 'tls';
 	    } else {
 	    	$mail->SMTPAuth   = false;
+	    	$mail->SMTPAutoTLS = false;
 	    	$mail->SMTPSecure = false;
 	    }
 
