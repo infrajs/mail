@@ -44,23 +44,23 @@ class Mail {
 
 		$conf = Mail::$conf;
 		if (empty($conf['from'])) $conf['from'] = 'noreplay@'.$_SERVER['HTTP_HOST'];
-
 		$mail->CharSet = 'UTF-8';
-	    //Server settings
+	    
 	    //$mail->SMTPDebug = 2;
-	    $mail->SMTPDebug = $debug;                                       // Enable verbose debug output
-	    $mail->isSMTP();                                          // Set mailer to use SMTP
-
-	    $mail->Host       = $conf['smtp'];  // Specify main and backup SMTP servers
+	    $mail->SMTPDebug = $debug;
+	    
+	    $mail->isSMTP();
+	    $mail->Port = $conf['smtpport'];
+	    $mail->Host       = $conf['smtp'];
 	    if (!empty($conf['smtplogin'])) {
 		    $mail->SMTPAuth   = true;
-		    $mail->Username   = $conf['smtplogin'];                     // SMTP username
-		    $mail->Password   = $conf['smtppassword'];                               // SMTP password
+		    $mail->Username   = $conf['smtplogin'];
+		    $mail->Password   = $conf['smtppassword'];
+		    $mail->SMTPSecure = 'tls';
 	    } else {
 	    	$mail->SMTPAuth   = false;
+	    	$mail->SMTPSecure = false;
 	    }
-	    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
-	    $mail->Port       = $conf['smtpport'];                                    // TCP port to connect to
 
 	    $mail->setFrom($conf['from']);
 
