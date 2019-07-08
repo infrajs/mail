@@ -4,5 +4,6 @@
 	"smtp":"smtp.yandex.ru",
 	"smtplogin":"",
 	"smtppassword":"",
+	"smtpport":587,
 	"from":false
 }
