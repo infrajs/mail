@@ -47,8 +47,8 @@ class Mail {
 
 		$mail->CharSet = 'UTF-8';
 	    //Server settings
-	    $mail->SMTPDebug = 2;
-	    //$mail->SMTPDebug = $debug;                                       // Enable verbose debug output
+	    //$mail->SMTPDebug = 2;
+	    $mail->SMTPDebug = $debug;                                       // Enable verbose debug output
 	    $mail->isSMTP();                                          // Set mailer to use SMTP
 
 	    $mail->Host       = $conf['smtp'];  // Specify main and backup SMTP servers
