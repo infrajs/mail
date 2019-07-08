@@ -53,9 +53,11 @@ class Mail {
 
 	    $mail->Host       = $conf['smtp'];  // Specify main and backup SMTP servers
 	    if (!empty($conf['smtplogin'])) {
-		    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+		    $mail->SMTPAuth   = true;
 		    $mail->Username   = $conf['smtplogin'];                     // SMTP username
 		    $mail->Password   = $conf['smtppassword'];                               // SMTP password
+	    } else {
+	    	$mail->SMTPAuth   = false;
 	    }
 	    $mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
 	    $mail->Port       = $conf['smtpport'];                                    // TCP port to connect to
