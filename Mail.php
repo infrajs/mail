@@ -51,7 +51,7 @@ class Mail {
 	    
 	    $mail->isSMTP();
 	    $mail->Port = $conf['smtpport'];
-	    $mail->Host       = $conf['smtp'];
+	    $mail->Host = $conf['smtp'];
 	    if (!empty($conf['smtplogin'])) {
 		    $mail->SMTPAuth   = true;
 		    $mail->Username   = $conf['smtplogin'];
