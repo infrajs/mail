@@ -62,7 +62,9 @@ class Mail {
 	    	$mail->SMTPAutoTLS = false;
 	    	$mail->SMTPSecure = false;
 	    }
-
+	    if (!empty($conf['options'])) {
+	    	$mail->SMTPOptions = $conf['options'];
+	    }
 	    $mail->setFrom($conf['from']);
 
 
