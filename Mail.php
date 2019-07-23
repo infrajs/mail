@@ -39,7 +39,7 @@ class Mail {
 		return Mail::sent($subject, $from, $emailto, $body);
 	}
 
-	static public function html($subject, $body, $replay_to, $email_to, $debug = false) { //from to
+	static public function html($subject, $body, $replay_to = true, $email_to = true, $debug = false) { //from to
 		$mail = new PHPMailer();
 
 		$conf = Mail::$conf;
