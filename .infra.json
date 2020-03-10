@@ -3,6 +3,7 @@
 	"debug":0,
 	"update":"update.php",
 	"smtp":"smtp.yandex.ru",
+	"replay":"",
 	"smtplogin":"",
 	"smtppassword":"",
 	"smtpport":587,

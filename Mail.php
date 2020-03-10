@@ -88,7 +88,10 @@ class Mail {
 
 
 
-	    if ($replay_to === true) $replay_to = Access::$conf['admin']['email'];
+	    if ($replay_to === true) {
+	    	if (!empty(Mail::$conf['replay'])) $replay_to = Mail::$conf['replay'];
+	    	else $replay_to = Access::$conf['admin']['email'];
+	    }
 		$p = explode(',', $replay_to);
 		$replay_to = $p[0];
 		$p = explode('<', $replay_to);
