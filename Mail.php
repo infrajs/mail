@@ -49,7 +49,9 @@ class Mail {
 	    if (!$debug) $debug = $conf['debug'];
 	    $mail->SMTPDebug = $debug;
 	    
-	    $mail->isSMTP();
+	    if ($conf['isSMTP']) {
+	    	$mail->isSMTP();	
+	    }
 	    $mail->Port = $conf['smtpport'];
 	    $mail->Host = $conf['smtp'];
 	    if (!empty($conf['smtplogin'])) {

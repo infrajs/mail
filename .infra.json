@@ -8,6 +8,7 @@
 	"smtppassword":"",
 	"smtpport":587,
 	"from":false,
+	"isSMTP":true,
 	"options":{
 		"ssl": {
 			"verify_peer": false,
